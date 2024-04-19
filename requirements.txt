@@ -1,0 +1,10 @@
+easyocr
+manga-ocr
+paddlepaddle-gpu
+paddleocr
+deep_translator
+Pillow==10.0
+wget
+colorama
+nest_asyncio
+python-dotenv

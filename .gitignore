@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+env/
+.env
+*.log
+config.ini
+credentials.json
+
+Dataset/
+Fonts/
+Models/

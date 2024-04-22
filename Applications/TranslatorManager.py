@@ -28,7 +28,7 @@ class TranslatorManager:
             "Francés": "fr",
             "Italiano": "it",
             "Japonés": "ja",
-            "Koreano": "ko",
+            "Coreano": "ko",
             "Chino": "zh-CN"
         }
         return mapeo_idiomas_admitidos.get(idioma_entrada, "auto"), mapeo_idiomas_admitidos.get(idioma_salida, "es")

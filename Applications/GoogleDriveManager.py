@@ -142,13 +142,20 @@ class GoogleDriveManager:
             output_folder_name = os.path.join(RUTA_REMOTA, output_folder_name)
             output_folder_id = self.create_folder(output_folder_name)
 
-            # Recorre todos los archivos dentro de la carpeta de entrada
-            for root, _, files in os.walk(input_folder_path):
+            # Recorre todos los archivos y carpetas dentro de la carpeta de entrada
+            for root, dirs, files in os.walk(input_folder_path):
+                # Excluimos la carpeta raíz y la carpeta "." en el primer nivel
+                if root == input_folder_path:
+                    dirs[:] = [d for d in dirs if d != "."]
+
+                # Crea las carpetas en la carpeta de salida si es necesario
+                relative_path = os.path.relpath(root, input_folder_path)
+                output_subfolder_path = os.path.join(output_folder_name, relative_path)
+
+                # Sube los archivos a la carpeta de salida en Google Drive
                 for file_name in files:
-                    # Obtiene la ruta completa del archivo
                     file_path = os.path.join(root, file_name)
-                    # Sube el archivo a la carpeta de salida en Google Drive
-                    self.upload_file(file_path, output_folder_name)
+                    self.upload_file(file_path, output_subfolder_path)
 
             return output_folder_id
         except Exception as e:

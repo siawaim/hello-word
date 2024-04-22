@@ -6,6 +6,7 @@ from Applications.Utilities import Utilities
 class ParallelProcessor:
     def __init__(self):
         self.utilities = Utilities()
+        mp.set_start_method('spawn', force=True)
     
     def procesar_en_paralelo(self, ruta_carpeta_entrada, ruta_carpeta_salida, process_func, batch_size = 4):
         try:

@@ -1,3 +1,4 @@
+import re
 import sys
 import os
 import time
@@ -6,6 +7,7 @@ import platform
 from zipfile import ZipFile
 import threading
 from PIL import Image
+import requests
 
 sys.path.append(os.path.dirname(os.getcwd()))
 from Utils.Constantes import RUTA_ACTUAL, RUTA_FUENTE, RUTA_LOCAL_FUENTES, RUTA_LOCAL_MODELO_INPAINTING, RUTA_LOCAL_TEMPORAL, RUTA_MODELO_AOT, RUTA_MODELO_LAMA, RUTA_MODELO_LAMA_LARGE, URL_FUENTE, URL_MODELO_AOT, URL_MODELO_LAMA, URL_MODELO_LAMA_LARGE
@@ -96,14 +98,15 @@ class Utilities:
             self.remote_file_downloader.download(
                 download_url=URL_MODELO_AOT,
                 output_path=RUTA_LOCAL_MODELO_INPAINTING,
-                output_filename="lama_mpe.ckpt"
+                output_filename="aot.ckpt"
             )
 
-    def descargar_y_extraer_zip(self, url_drive):
+    
+    def descargar_y_extraer_zip(self, drive_manager, url_drive):
         try:
-            ruta_archivo_descargado = self.remote_file_downloader.download(
-                download_url=url_drive,
-                output_path=RUTA_ACTUAL,
+            ruta_archivo_descargado = drive_manager.download_file_from_link(
+                file_link=url_drive,
+                output_folder=RUTA_ACTUAL
             )
             ruta_extraccion = os.path.join(RUTA_ACTUAL, os.path.splitext(os.path.basename(ruta_archivo_descargado))[0])
             os.makedirs(ruta_extraccion, exist_ok=True)

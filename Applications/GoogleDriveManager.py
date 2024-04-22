@@ -1,4 +1,5 @@
 
+import re
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
@@ -15,6 +16,36 @@ class GoogleDriveManager:
         gauth = GoogleAuth()
         gauth.credentials = GoogleCredentials.get_application_default()
         self.drive = GoogleDrive(gauth)
+ 
+ 
+    def get_drive_file_id(self, url_drive):
+        match = re.search(r"/d/([^/]+)", url_drive)
+        if match:
+            file_id = match.group(1)
+            return file_id
+        else:
+            return None
+        
+    def download_file_from_link(self, file_link, output_folder):
+        try:
+            file_id = self.get_drive_file_id(file_link)
+
+            if file_id:
+                # Obtiene el archivo usando el ID
+                downloaded_file = self.drive.CreateFile({'id': file_id})
+                
+                # Descarga el archivo en la carpeta de salida
+                output_file_path = os.path.join(output_folder, downloaded_file['title'])
+                downloaded_file.GetContentFile(output_file_path)
+                
+                # Devuelve la ruta completa donde se descargó el archivo
+                return output_file_path
+            else:
+                print("Error: No se pudo obtener el ID del archivo desde el enlace.")
+                return None
+        except Exception as e:
+            print(f"Error: {e}")
+            return None
  
     def get_folder_or_file_id(self, name, parent_folder_id=None, is_folder=True):
         try:

@@ -17,6 +17,7 @@ RUTA_LOCAL_FUENTES = construir_ruta(RUTA_ACTUAL, "Fonts")
 RUTA_FUENTE = construir_ruta(RUTA_LOCAL_FUENTES, "NewWildWordsRoman.ttf")
 RUTA_LOCAL_PDFS = construir_ruta(RUTA_ACTUAL, "pdfs")
 RUTA_LOCAL_ZIPS = construir_ruta(RUTA_ACTUAL, "zips")
+RUTA_LOCAL_TEMPORAL = construir_ruta(RUTA_ACTUAL, "temp")
 
 TAMANIO_MINIMO_FUENTE = 12
 FACTOR_ESPACIO = 0.42

@@ -9,3 +9,4 @@ colorama
 nest_asyncio
 python-dotenv
 pydrive2
+gdown

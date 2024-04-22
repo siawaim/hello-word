@@ -4,7 +4,7 @@ def construir_ruta(base, *paths):
     return os.path.join(base, *paths).replace("/", os.path.sep)
 
 RUTA_ACTUAL = os.getcwd()
-RUTA_REMOTA = "Parallel manga translate"
+RUTA_REMOTA = "ParallelMangaTranslator"
 
 IDIOMAS_ENTRADA_DISPONIBLES = ['Chino', 'Coreano', 'Inglés', 'Japonés']
 IDIOMAS_SALIDA_DISPONIBLES = ['Español', 'Inglés', 'Portugués', 'Francés', 'Italiano', 'Francés']

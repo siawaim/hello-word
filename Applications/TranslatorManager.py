@@ -10,7 +10,7 @@ class TranslatorManager:
         self.idioma_entrada = idioma_entrada
         self.idioma_salida = idioma_salida
         abv_idioma_entrada, abv_idioma_salida = self.obtener_abreviacion_idioma(idioma_entrada, idioma_salida)
-        if DEEPL_API_KEY is not None:
+        if 'DEEPL_API_KEY' in globals() and DEEPL_API_KEY is not None:
             self.translator = DeeplTranslator(
                 api_key=DEEPL_API_KEY, 
                 source=abv_idioma_entrada, 

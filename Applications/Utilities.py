@@ -106,6 +106,7 @@ class Utilities:
                 output_path=RUTA_ACTUAL,
             )
             ruta_extraccion = os.path.join(RUTA_ACTUAL, os.path.splitext(os.path.basename(ruta_archivo_descargado))[0])
+            os.makedirs(ruta_extraccion, exist_ok=True)
             with ZipFile(ruta_archivo_descargado, "r") as zip_ref:
                 zip_ref.extractall(ruta_extraccion)
             os.remove(ruta_archivo_descargado)
@@ -113,6 +114,7 @@ class Utilities:
         except Exception as e:
             print(f"Error al descargar y extraer zip: {e}")
             return None
+        
     def convertir_a_diccionarios(self, lista_de_listas):
         lotes_diccionarios = []
         indice_acumulado = 0

@@ -8,3 +8,4 @@ wget
 colorama
 nest_asyncio
 python-dotenv
+pydrive2

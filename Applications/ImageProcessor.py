@@ -7,6 +7,16 @@ from Applications.Utilities import Utilities
 from Applications.CleanManga import CleanManga
 from Applications.TranslateManga import TranslateManga
 from Applications.FileManager import FileManager
+import logging
+
+logger = logging.getLogger('log')
+logger.setLevel(logging.DEBUG)
+fh = logging.FileHandler('debug.log')
+fh.setLevel(logging.DEBUG)
+logger.addHandler(fh)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+fh.setFormatter(formatter)
+logger.addHandler(fh)
 
 class ImageProcessor:
     def __init__(self, idioma_entrada, idioma_salida, modelo_inpaint):
@@ -17,10 +27,11 @@ class ImageProcessor:
 
     def procesar(self, ruta_carpeta_entrada, ruta_limpieza_salida, ruta_traduccion_salida, lote, transcripcion_queue, traduccion_queue):
         for indice_imagen, archivo in lote.items():
-            print(f"Procesando: {archivo}")
+            logger.debug(f"Procesando: {archivo}")
             img_array = np.fromfile(os.path.join(ruta_carpeta_entrada, archivo), np.uint8)
             imagen = cv2.imdecode(img_array, cv2.IMREAD_UNCHANGED)
             memoria_suficiente = False
+            intentos = 0
             while not memoria_suficiente:
                 try:
                     # Limpieza
@@ -56,17 +67,18 @@ class ImageProcessor:
                     cv2.imwrite(archivo_traduccion_salida, imagen_traducida)
                     memoria_suficiente = True
                 except (torch.cuda.CudaError, RuntimeError) as e:
-                    print(f"Error: {e}")
-                    imagen = self.reducir_imagen(imagen)
+                    logger.error(f"Error al procesar el archivo {archivo}: {e}")
+                    if intentos < 3:
+                        imagen = self.reducir_imagen(imagen)
                     torch.cuda.empty_cache()
-                    time.sleep(2)
-                    
+                    time.sleep(1)
                 except Exception as e:
-                    print(f"Error: {e}")
-                    imagen = self.reducir_imagen(imagen)
-                    torch.cuda.empty_cache()
-                    time.sleep(2)
-            
+                    logger.error(f"Error al procesar el archivo {archivo}: {e}")
+                finally:
+                    intentos += 1
+                    
+            del imagen
+                    
     def obtener_formato_manga(self, imagen):
         # Convierte la imagen a escala de grises
         imagen_gris = cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY)
@@ -82,7 +94,7 @@ class ImageProcessor:
     
     def reducir_imagen(self, imagen):
         try:
-            porcentaje_reduccion = 0.8
+            porcentaje_reduccion = 0.75
             nuevo_alto, nuevo_ancho = [int(dim * porcentaje_reduccion) for dim in imagen.shape[:2]]
             return cv2.resize(imagen, (nuevo_ancho, nuevo_alto))
         except Exception as e:

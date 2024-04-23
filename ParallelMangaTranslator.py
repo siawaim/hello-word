@@ -8,6 +8,7 @@ from Utils.Constantes import MODELOS_INPAINT
 
 logger.remove()
 warnings.filterwarnings("ignore", message="The class ViTFeatureExtractor is deprecated", category=FutureWarning)
+os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'expandable_segments:True, max_split_size_mb:1024'
 
 if __name__ == '__main__':
     utilities = Utilities()

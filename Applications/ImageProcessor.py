@@ -9,7 +9,7 @@ from Applications.TranslateManga import TranslateManga
 from Applications.FileManager import FileManager
 import logging
 
-logger = logging.getLogger('log')
+logger = logging.getLogger('debug')
 logger.setLevel(logging.DEBUG)
 fh = logging.FileHandler('debug.log')
 fh.setLevel(logging.DEBUG)

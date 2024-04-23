@@ -1,6 +1,7 @@
 import os
 from loguru import logger
 import warnings
+import torch
 from Applications.ParallelProcessor import ParallelProcessor
 from Applications.ImageProcessor import ImageProcessor
 from Applications.Utilities import Utilities
@@ -8,9 +9,10 @@ from Utils.Constantes import MODELOS_INPAINT
 
 logger.remove()
 warnings.filterwarnings("ignore", message="The class ViTFeatureExtractor is deprecated", category=FutureWarning)
-os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'expandable_segments:True, max_split_size_mb:1024'
+os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'expandable_segments:True'
 
 if __name__ == '__main__':
+    torch.cuda.empty_cache()
     utilities = Utilities()
     utilities.download_fonts()
     utilities.download_models()

@@ -3,6 +3,8 @@ import os
 def construir_ruta(base, *paths):
     return os.path.join(base, *paths).replace("/", os.path.sep)
 
+PESO_MODELOS = 7.8 # 7.8 Gb reservados para los modelos de OCR
+
 RUTA_ACTUAL = os.getcwd()
 RUTA_REMOTA = "ParallelMangaTranslator"
 

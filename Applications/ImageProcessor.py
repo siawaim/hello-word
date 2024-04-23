@@ -9,15 +9,6 @@ from Applications.TranslateManga import TranslateManga
 from Applications.FileManager import FileManager
 import logging
 
-logger = logging.getLogger('debug')
-logger.setLevel(logging.DEBUG)
-fh = logging.FileHandler('debug.log')
-fh.setLevel(logging.DEBUG)
-logger.addHandler(fh)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-fh.setFormatter(formatter)
-logger.addHandler(fh)
-
 class ImageProcessor:
     def __init__(self, idioma_entrada, idioma_salida, modelo_inpaint):
         self.file_manager = FileManager()
@@ -25,7 +16,7 @@ class ImageProcessor:
         self.clean_manga = CleanManga(modelo_inpaint)
         self.translate_manga = TranslateManga(idioma_entrada, idioma_salida)
 
-    def procesar(self, ruta_carpeta_entrada, ruta_limpieza_salida, ruta_traduccion_salida, lote, transcripcion_queue, traduccion_queue):
+    def procesar(self, ruta_carpeta_entrada, ruta_limpieza_salida, ruta_traduccion_salida, lote, transcripcion_queue, traduccion_queue, logger):
         for indice_imagen, archivo in lote.items():
             logger.debug(f"Procesando: {archivo}")
             with open(os.path.join(ruta_carpeta_entrada, archivo), 'rb') as f:

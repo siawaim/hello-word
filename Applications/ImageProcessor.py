@@ -7,6 +7,7 @@ from Applications.Utilities import Utilities
 from Applications.CleanManga import CleanManga
 from Applications.TranslateManga import TranslateManga
 from Applications.FileManager import FileManager
+from loguru import logger
 
 class ImageProcessor:
     def __init__(self, idioma_entrada, idioma_salida, modelo_inpaint):
@@ -17,7 +18,7 @@ class ImageProcessor:
 
     def procesar(self, ruta_carpeta_entrada, ruta_limpieza_salida, ruta_traduccion_salida, lote, transcripcion_queue, traduccion_queue):
         for indice_imagen, archivo in lote.items():
-            print(f"Procesando: {archivo}")
+            logger.info(f"Procesando: {archivo}")
             intentos = 0
             img_array = np.fromfile(os.path.join(ruta_carpeta_entrada, archivo), np.uint8)
             imagen = cv2.imdecode(img_array, cv2.IMREAD_UNCHANGED)
@@ -56,13 +57,13 @@ class ImageProcessor:
                     cv2.imwrite(archivo_traduccion_salida, imagen_traducida)
                     break
                 except (torch.cuda.CudaError, RuntimeError) as e:
-                    print(f"Error: {e}")
+                    logger.info(f"Error: {e}")
                     imagen = self.reducir_imagen(imagen)
                     torch.cuda.empty_cache()
                     time.sleep(1)
                     intentos += 1
                 except Exception as e:
-                    print(f"Error: {e}")
+                    logger.info(f"Error: {e}")
                     imagen = self.reducir_imagen(imagen)
                     torch.cuda.empty_cache()
                     time.sleep(1)
@@ -91,5 +92,5 @@ class ImageProcessor:
             nuevo_alto, nuevo_ancho = [int(dim * porcentaje_reduccion) for dim in imagen.shape[:2]]
             return cv2.resize(imagen, (nuevo_ancho, nuevo_alto))
         except Exception as e:
-            print(f"Error al reducir la imagen: {e}")
+            logger.info(f"Error al reducir la imagen: {e}")
             return imagen

@@ -89,7 +89,6 @@ class ParallelProcessor:
             traduccion_process.join()
             transcripcion_queue.close()
             traduccion_queue.close()
-            
             return True
         except Exception as e:
             # Captura cualquier excepción y la imprime

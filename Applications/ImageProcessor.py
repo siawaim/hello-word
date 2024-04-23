@@ -28,8 +28,11 @@ class ImageProcessor:
     def procesar(self, ruta_carpeta_entrada, ruta_limpieza_salida, ruta_traduccion_salida, lote, transcripcion_queue, traduccion_queue):
         for indice_imagen, archivo in lote.items():
             logger.debug(f"Procesando: {archivo}")
-            img_array = np.fromfile(os.path.join(ruta_carpeta_entrada, archivo), np.uint8)
-            imagen = cv2.imdecode(img_array, cv2.IMREAD_UNCHANGED)
+            with open(os.path.join(ruta_carpeta_entrada, archivo), 'rb') as f:
+                byte_array = f.read()
+            # Convertir a numpy array
+            image_nparr = np.frombuffer(byte_array, np.uint8)
+            imagen = cv2.imdecode(image_nparr, cv2.IMREAD_COLOR)
             memoria_suficiente = False
             intentos = 0
             while not memoria_suficiente:

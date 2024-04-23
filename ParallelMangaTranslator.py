@@ -14,8 +14,8 @@ if __name__ == '__main__':
     utilities.download_fonts()
     utilities.download_models()
 
-    modelo_inpaint_seleccionado = MODELOS_INPAINT[1]
-    print(f"Modelo inpaint seleccionado: {modelo_inpaint_seleccionado}")
+    modelo_inpaint = MODELOS_INPAINT[1]
+    print(f"Modelo inpaint seleccionado: {modelo_inpaint}")
     batch_size = 1 # Tamaño de lote -> Si hay 24 imágenes entonces se crearán 3 procesos de 8 imágenes cada uno
     idioma_entrada = "Japonés"
     idioma_salida = "Español"
@@ -30,7 +30,7 @@ if __name__ == '__main__':
     image_procesor = ImageProcessor(
         idioma_entrada=idioma_entrada,
         idioma_salida=idioma_salida,
-        modelo_inpaint=modelo_inpaint_seleccionado
+        modelo_inpaint=modelo_inpaint
     )
 
     parallel_processor = ParallelProcessor()

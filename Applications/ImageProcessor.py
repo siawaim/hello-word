@@ -17,6 +17,7 @@ class ImageProcessor:
 
     def procesar(self, ruta_carpeta_entrada, ruta_limpieza_salida, ruta_traduccion_salida, lote, transcripcion_queue, traduccion_queue):
         for indice_imagen, archivo in lote.items():
+            print(f"Procesando: {archivo}")
             intentos = 0
             img_array = np.fromfile(os.path.join(ruta_carpeta_entrada, archivo), np.uint8)
             imagen = cv2.imdecode(img_array, cv2.IMREAD_UNCHANGED)
@@ -53,8 +54,14 @@ class ImageProcessor:
                     imagen_traducida = self.translate_manga.traducir_manga(imagen, imagen_limpia, mascara_capa)
                     archivo_traduccion_salida = os.path.join(ruta_traduccion_salida, archivo)
                     cv2.imwrite(archivo_traduccion_salida, imagen_traducida)
-                    break  # Sal del bucle while si no hay excepciones
+                    break
                 except (torch.cuda.CudaError, RuntimeError) as e:
+                    print(f"Error: {e}")
+                    imagen = self.reducir_imagen(imagen)
+                    torch.cuda.empty_cache()
+                    time.sleep(1)
+                    intentos += 1
+                except Exception as e:
                     print(f"Error: {e}")
                     imagen = self.reducir_imagen(imagen)
                     torch.cuda.empty_cache()

@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     modelo_inpaint_seleccionado = MODELOS_INPAINT[1]
     print(f"Modelo inpaint seleccionado: {modelo_inpaint_seleccionado}")
-    batch_size = 1 # Tamaño de lote -> Si hay 24 imágenes entonces se crearán 3 procesos de 8 imágenes cada uno
+    batch_size = 8 # Tamaño de lote -> Si hay 24 imágenes entonces se crearán 3 procesos de 8 imágenes cada uno
     idioma_entrada = "Japonés"
     idioma_salida = "Español"
     ruta_carpeta_entrada = "Dataset"

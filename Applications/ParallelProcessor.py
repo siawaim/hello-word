@@ -28,10 +28,12 @@ class ParallelProcessor:
             while num_processes > self.multi_processor_count or num_processes * PESO_MODELOS > self.total_memory_gb:
                 if batch_size >= cantidad_archivos:
                     break
-                print(f"La memoria GPU es insuficiente, se reasignara un batch_size de {batch_size}")
                 batch_size += 1
                 lotes_imagenes =  [lista_imagenes[i:i+batch_size] for i in range(0, cantidad_archivos, batch_size)]
                 num_processes = len(lotes_imagenes)
+                
+                if num_processes <= self.multi_processor_count and num_processes * PESO_MODELOS <= self.total_memory_gb:
+                    print(f"La memoria GPU es insuficiente, se reasignara un batch_size de {batch_size}")
 
             lotes_imagenes = self.utilities.convertir_a_diccionarios(lotes_imagenes)
             ruta_limpieza_salida = os.path.join(ruta_carpeta_salida, "Limpieza")

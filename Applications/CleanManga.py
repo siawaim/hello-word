@@ -66,14 +66,23 @@ class CleanManga:
         return resultados
 
     def fusionar_cuadros_delimitadores(self, imagen, resultados):
+        expansion = 1
         # Obtener dimensiones de la imagen
         height, width = imagen.shape[:2]
         # Crear una máscara de capa vacía del mismo tamaño que la imagen
         mascara = np.zeros((height, width), dtype=np.uint8)
         # Iterar sobre los resultados del reconocimiento de texto
         for detection in resultados:
-            caja = detection[0]
+            caja = detection[0] 
             puntos = np.array(caja, dtype=np.int32).reshape((-1, 1, 2))
-            cv2.fillPoly(mascara, [puntos], 255)
+            x, y, w, h = cv2.boundingRect(puntos)
+            x_margin = max(0, x - expansion)
+            y_margin = max(0, y - expansion)
+            w_margin = min(w + expansion, width - x_margin)
+            h_margin = min(h + expansion, height - y_margin)
+            puntos_margin = np.array([[x_margin, y_margin], [x_margin + w_margin, y_margin], 
+                                  [x_margin + w_margin, y_margin + h_margin], [x_margin, y_margin + h_margin]], dtype=np.int32)
+            # Rellenar la máscara con la caja delimitadora expandida
+            cv2.fillPoly(mascara, [puntos_margin], 255)
 
         return mascara

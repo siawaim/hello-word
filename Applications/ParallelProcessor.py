@@ -18,9 +18,9 @@ class ParallelProcessor:
     def procesar_en_paralelo(self, ruta_carpeta_entrada, ruta_carpeta_salida, process_func, batch_size = 8):
         try:
             archivos = os.listdir(ruta_carpeta_entrada)
-            lista_imagenes = [
+            lista_imagenes = sorted([
                 archivo for archivo in archivos if archivo.lower().endswith(('.jpg', '.png', '.jpeg', '.bmp'))
-            ]
+            ])
             cantidad_archivos = len(lista_imagenes)
             # Dividir las imágenes en lotes para procesamiento paralelo
             lotes_imagenes =  [lista_imagenes[i:i+batch_size] for i in range(0, cantidad_archivos, batch_size)]

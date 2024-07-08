@@ -4,11 +4,9 @@ import cv2
 import os
 import numpy as np
 import torch
-from Applications.Utilities import Utilities
 from Applications.CleanManga import CleanManga
 from Applications.TranslateManga import TranslateManga
 from Applications.FileManager import FileManager
-from Utils.Constantes import RUTA_REMOTA
 
 logger = logging.getLogger('debug')
 logger.setLevel(logging.DEBUG)
@@ -22,10 +20,6 @@ logger.addHandler(fh)
 class ImageProcessor:
     def __init__(self, idioma_entrada, idioma_salida, modelo_inpaint):
         self.file_manager = FileManager()
-        self.utilities = Utilities()
-        if self.utilities.is_colab():
-            from Applications.GoogleDriveManager import GoogleDriveManager
-            self.drive_manager = GoogleDriveManager()
         self.clean_manga = CleanManga(modelo_inpaint)
         self.translate_manga = TranslateManga(idioma_entrada, idioma_salida)
 
@@ -72,17 +66,6 @@ class ImageProcessor:
                     imagen_traducida = self.translate_manga.traducir_manga(imagen, imagen_limpia, mascara_capa)
                     archivo_traduccion_salida = os.path.join(ruta_traduccion_salida, archivo)
                     cv2.imwrite(archivo_traduccion_salida, imagen_traducida)
-                    
-                    if self.utilities.is_colab():
-                        # Subimos a google drive las imagenes limpias y traducidas
-                        self.drive_manager.upload_file(
-                            folder_name=  os.path.join(RUTA_REMOTA, ruta_limpieza_salida),
-                            local_file_path=archivo_limpieza_salida
-                        )
-                        self.drive_manager.upload_file(
-                            folder_name=  os.path.join(RUTA_REMOTA, ruta_traduccion_salida),
-                            local_file_path=archivo_traduccion_salida
-                        )
                     memoria_suficiente = True
                 except (torch.cuda.CudaError, RuntimeError) as e:
                     logger.error(f"Error al procesar el archivo {archivo}: {e}")

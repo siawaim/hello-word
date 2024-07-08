@@ -4,7 +4,6 @@ import cv2
 import os
 import numpy as np
 import torch
-from Applications.GoogleDriveManager import GoogleDriveManager
 from Applications.Utilities import Utilities
 from Applications.CleanManga import CleanManga
 from Applications.TranslateManga import TranslateManga
@@ -25,6 +24,7 @@ class ImageProcessor:
         self.file_manager = FileManager()
         self.utilities = Utilities()
         if self.utilities.is_colab():
+            from Applications.GoogleDriveManager import GoogleDriveManager
             self.drive_manager = GoogleDriveManager()
         self.clean_manga = CleanManga(modelo_inpaint)
         self.translate_manga = TranslateManga(idioma_entrada, idioma_salida)

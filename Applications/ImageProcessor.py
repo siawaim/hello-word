@@ -4,6 +4,7 @@ import cv2
 import os
 import numpy as np
 import torch
+from Applications.Utilities import Utilities
 from Applications.CleanManga import CleanManga
 from Applications.TranslateManga import TranslateManga
 from Applications.FileManager import FileManager
@@ -20,6 +21,7 @@ logger.addHandler(fh)
 class ImageProcessor:
     def __init__(self, idioma_entrada, idioma_salida, modelo_inpaint):
         self.file_manager = FileManager()
+        self.utilities =Utilities()
         self.clean_manga = CleanManga(modelo_inpaint)
         self.translate_manga = TranslateManga(idioma_entrada, idioma_salida)
 

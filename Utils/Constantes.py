@@ -10,7 +10,7 @@ RUTA_REMOTA = "ParallelMangaTranslator"
 
 IDIOMAS_ENTRADA_DISPONIBLES = ['Chino', 'Coreano', 'Inglés', 'Japonés']
 IDIOMAS_SALIDA_DISPONIBLES = ['Español', 'Inglés', 'Portugués', 'Francés', 'Italiano', 'Francés']
-MODELOS_INPAINT = ['opencv-tela', 'lama_mpe', 'lama_large_512px', 'aot']
+MODELOS_INPAINT = ['opencv-tela', 'lama_mpe', 'lama_large_512px', 'aot', 'B/N']
 RUTA_LOCAL_MODELO_INPAINTING = construir_ruta(RUTA_ACTUAL, "Models", "inpainting")
 RUTA_MODELO_LAMA = construir_ruta(RUTA_LOCAL_MODELO_INPAINTING, "lama_mpe.ckpt")
 RUTA_MODELO_LAMA_LARGE = construir_ruta(RUTA_LOCAL_MODELO_INPAINTING, "lama_large_512px.ckpt")

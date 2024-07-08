@@ -5,13 +5,14 @@ import cv2
 import asyncio
 from PIL import Image
 
-from Applications.inpaint import OpenCVInpainter, LamaInpainterMPE, LamaLarge, AOTInpainter
+from Applications.inpaint import OpenCVInpainter, LamaInpainterMPE, LamaLarge, AOTInpainter, BNInpainter
 
 INSTANCIAS_INPAINT = {
     'opencv-tela': OpenCVInpainter(),
     'lama_mpe': LamaInpainterMPE(),
     'lama_large_512px' : LamaLarge(),
-    'aot': AOTInpainter()
+    'aot': AOTInpainter(),
+    'B/N': BNInpainter()
 }
 
 class CleanManga:
@@ -23,13 +24,14 @@ class CleanManga:
     def limpiar_manga(self, imagen):
         resultados = self.obtener_cuadros_delimitadores(imagen)
         mascara_capa = self.fusionar_cuadros_delimitadores(imagen, resultados)
-        if self.inpaint_model != 'opencv-tela':
+        if self.inpaint_model == 'B/N':
+           res_impainting = self.inpainter.inpaint(imagen, resultados)
+        elif self.inpaint_model == 'opencv-tela':
+            res_impainting = self.inpainter.inpaint(imagen, mascara_capa)
+        else:
             asyncio.set_event_loop(asyncio.new_event_loop())
             loop = asyncio.get_event_loop()
-            res_impainting = loop.run_until_complete(
-                self.inpaint_async(imagen, mascara_capa))
-        else:
-            res_impainting = self.inpainter.inpaint(imagen, mascara_capa)
+            res_impainting = loop.run_until_complete(self.inpaint_async(imagen, mascara_capa))
 
         imagen_limpia = self.convertir_a_imagen_limpia(res_impainting, imagen)
         return mascara_capa, imagen_limpia

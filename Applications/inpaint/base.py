@@ -1,8 +1,9 @@
+from typing import List
 import numpy as np
 import cv2
 import sys
 
-from Utils.Constantes import RUTA_MODELO_AOT, RUTA_MODELO_LAMA, RUTA_MODELO_LAMA_LARGE
+from Utils.Constantes import COLOR_BLANCO, COLOR_NEGRO, RUTA_MODELO_AOT, RUTA_MODELO_LAMA, RUTA_MODELO_LAMA_LARGE
 from .modules import DEFAULT_DEVICE, DEVICE_SELECTOR, TORCH_DTYPE_MAP, BF16_SUPPORTED
 
 
@@ -12,6 +13,43 @@ class OpenCVInpainter:
     
     def inpaint(self, img: np.ndarray, mask: np.ndarray) -> np.ndarray:
         return cv2.inpaint(img, mask, 3, cv2.INPAINT_NS)
+
+class BNInpainter:
+    def __init__(self):
+        pass
+    
+    def inpaint(self, img: np.ndarray, resultados: List[np.ndarray], expansion: int = 1) -> np.ndarray:
+        height, width = img.shape[:2]
+        inpainted_img = img.copy()  # Copia de la imagen original para mantenerla intacta
+        for detection in resultados:
+            caja = detection[0]
+            puntos = np.array(caja, dtype=np.int32).reshape((-1, 1, 2))
+            
+            # Calcular los límites de la región con margen
+            x, y, w, h = cv2.boundingRect(puntos)
+            x_margin = max(0, x - expansion)
+            y_margin = max(0, y - expansion)
+            w_margin = min(w + expansion, width - x_margin)
+            h_margin = min(h + expansion, height - y_margin)
+            
+            # Definir los puntos del contorno con margen
+            puntos_margin = np.array([[x_margin, y_margin], [x_margin + w_margin, y_margin], 
+                                  [x_margin + w_margin, y_margin + h_margin], [x_margin, y_margin + h_margin]], dtype=np.int32)
+            
+             # Extraer la región de la imagen
+            region_img = img[y_margin:y_margin + h_margin, x_margin:x_margin + w_margin]
+            
+            # Calcular el promedio de colores
+            average_color = np.mean(region_img, axis=(0, 1))
+            
+            if np.mean(average_color) > 128:
+                # Pintar de blanco la región
+                inpainted_img = cv2.fillPoly(inpainted_img, [puntos_margin], color=COLOR_BLANCO)
+            else:
+                # Pintar de negro la región
+                inpainted_img = cv2.fillPoly(inpainted_img, [puntos_margin], color=COLOR_NEGRO)
+        
+        return inpainted_img
 
 class PatchmatchInpainter():
 
@@ -46,6 +84,8 @@ class PatchmatchInpainter():
     
     def is_cpu_intensive(self) -> bool:
         return True
+
+
 
 
 import torch

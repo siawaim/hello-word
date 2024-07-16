@@ -64,7 +64,8 @@ class TranslateManga:
             INSTANCIAS_PADDLE_OCR = {
                 "Inglés" : PaddleOCR(use_angle_cls=True, lang='en', show_log=False),
                 "Coreano" : PaddleOCR(use_angle_cls=True, lang='korean', show_log=False),
-                "Chino" : PaddleOCR(use_angle_cls=True, lang='ch', show_log=False)
+                "Chino" : PaddleOCR(use_angle_cls=True, lang='ch', show_log=False),
+                "Español" : PaddleOCR(use_angle_cls=True, lang='es', show_log=False),
             }
             paddle_ocr = INSTANCIAS_PADDLE_OCR[self.idioma_entrada]
             for imagen_interes in imagenes_interes:
@@ -79,7 +80,7 @@ class TranslateManga:
                 else:
                     for i, line in enumerate(resultado_paddle[0]):
                         linea_actual = line[-1][0]
-                        if self.idioma_entrada == "Inglés":
+                        if self.idioma_entrada == "Inglés" or self.idioma_entrada == "Español":
                             if i > 0:
                                 text += " " + linea_actual
                             else:
@@ -109,8 +110,10 @@ class TranslateManga:
             texto = texto.replace(especial, normal)
         return texto
     
-    def suprimir_caracteres_repetidos(self, texto, min_reps=5):
-        patron = r"(.)\1{{{}}}".format(min_reps)
+    def suprimir_caracteres_repetidos(self, texto, min_reps=3):
+        # El patrón necesita permitir al menos min_reps repeticiones
+        patron = r"(.)\1{{{},}}".format(min_reps)
+        
         def reemplazo(match):
             # Devuelve solo tres repeticiones del carácter encontrado
             return match.group(1) * 3
@@ -118,6 +121,14 @@ class TranslateManga:
         # Reemplazamos las repeticiones por solo tres caracteres repetidos seguidos
         texto_modificado = re.sub(patron, reemplazo, texto)
         return texto_modificado
+    
+    def suprimir_simbolos_y_espacios(self, texto):
+        # Recorremos cada carácter de la cadena
+        for char in texto:
+            # Verificamos si el carácter es alfanumérico (letra o número)
+            if char.isalnum(): # o usar .isalpha (mas exhaustivo)
+                return texto
+        return ""
     
     def traducir_textos(self, textos):
         translator_manager = TranslatorManager(self.idioma_entrada, self.idioma_salida)
@@ -128,6 +139,7 @@ class TranslateManga:
                 texto_traducido = ""
             texto_traducido = self.reemplazar_caracter_especial(texto_traducido).strip()
             texto_traducido = self.suprimir_caracteres_repetidos(texto_traducido)
+            texto_traducido = self.suprimir_simbolos_y_espacios(texto_traducido)
             textos_traducidos.append(texto_traducido)
         return textos_traducidos
     

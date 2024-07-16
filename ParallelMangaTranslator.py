@@ -37,9 +37,10 @@ if __name__ == '__main__':
     )
 
     parallel_processor = ParallelProcessor()
-    parallel_processor.procesar_en_paralelo(
+    parallel_processor.procesar(
         ruta_carpeta_entrada=ruta_carpeta_entrada,
         ruta_carpeta_salida=ruta_carpeta_salida,
         process_func=image_procesor.procesar,
         batch_size=batch_size,
+        parallel=True
     )

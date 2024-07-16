@@ -4,7 +4,7 @@ ParallelMangaTranslator es una herramienta diseñada para simplificar y optimiza
 
 ## Características
 
-- **Procesamiento por Carpetas:** Permite procesar múltiples imágenes al seleccionar o especificar manualmente la ruta de la carpeta que contiene las imágenes. Admite formatos como .jpg, .png, .jpeg y .bmp. Además, puede descargar y descomprimir automáticamente archivos .zip desde Google Drive. 
+- **Procesamiento por Carpetas:** Permite procesar múltiples imágenes al seleccionar o especificar manualmente la ruta de la carpeta que contiene las imágenes. Admite formatos como .jpg, .png, .jpeg, .bmp y .webp. Además, puede descargar y descomprimir automáticamente archivos .zip desde Google Drive. 
 - **Detección Automática de Texto:** Utiliza algoritmos OCR avanzados para identificar texto en las páginas de manga, independientemente del estilo de dibujo o letra.
 - **Limpieza de Páginas:** Ofrece una herramienta para eliminar los textos de las páginas, facilitando la lectura y la posterior traducción.
 - **Camuflaje Avanzado:** Permite camuflar los textos en fondos de páginas a color, adaptándose incluso a fondos irregulares.

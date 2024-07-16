@@ -3,6 +3,8 @@ import torch
 import numpy as np
 import cv2
 import asyncio
+import nest_asyncio
+nest_asyncio.apply()
 from PIL import Image
 
 from Applications.inpaint import OpenCVInpainter, LamaInpainterMPE, LamaLarge, AOTInpainter, BNInpainter

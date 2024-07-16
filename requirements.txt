@@ -7,5 +7,6 @@ Pillow==10.0
 wget
 colorama
 nest_asyncio
+nest-asyncio
 python-dotenv
 pydrive2

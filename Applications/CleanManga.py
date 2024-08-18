@@ -64,7 +64,7 @@ class CleanManga:
                                      height_ths=0.05,
                                      x_ths=0.1,
                                      y_ths=0.3,
-                                     min_size=5,
+                                     min_size=9,
                                      link_threshold=0.98
                                      )
         return resultados
